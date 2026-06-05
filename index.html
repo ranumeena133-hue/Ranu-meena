@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jio Network 2</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+    <style>
+        /* Basic Reset */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+        body { background-color: #e9ecef; display: flex; justify-content: center; align-items: center; height: 100vh; }
+
+        .app-container {
+            width: 100%; max-width: 400px; height: 100vh; max-height: 850px;
+            background-color: #ffffff; position: relative; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Splash Screen */
+        .splash-screen {
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            height: 100%; background: linear-gradient(135deg, #ffffff, #f0f4f8);
+            position: absolute; width: 100%; z-index: 100;
+        }
+
+        .splash-screen img {
+            width: 100px; height: 100px; border-radius: 50%; object-fit: cover;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); animation: pulse 2s infinite;
+        }
+
+        .app-name { margin-top: 20px; font-size: 24px; font-weight: bold; color: #0f4c81; letter-spacing: 1px; }
+
+        /* Auth Screens */
+        .auth-screen {
+            display: none; flex-direction: column; align-items: center; padding: 50px 30px; height: 100%; background-color: #ffffff;
+        }
+
+        .auth-screen img { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); object-fit: cover; }
+        .auth-screen h2 { margin-bottom: 25px; color: #333; width: 100%; text-align: left; font-size: 28px; }
+
+        .input-group { width: 100%; margin-bottom: 20px; }
+        .input-group input {
+            width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 10px;
+            font-size: 16px; background-color: #f8f9fa; transition: border-color 0.3s;
+        }
+        .input-group input:focus { outline: none; border-color: #0f4c81; background-color: #fff; }
+
+        .btn {
+            width: 100%; padding: 15px; background-color: #0f4c81; color: white; border: none;
+            border-radius: 10px; font-size: 18px; font-weight: 600; cursor: pointer;
+            margin-top: 10px; transition: background-color 0.3s; box-shadow: 0 4px 12px rgba(15, 76, 129, 0.3);
+        }
+        .btn:hover { background-color: #0a355c; }
+
+        .switch-text { margin-top: 25px; color: #666; font-size: 15px; }
+        .switch-text span { color: #0f4c81; font-weight: bold; cursor: pointer; }
+        .studio-footer { position: absolute; bottom: 20px; width: 100%; text-align: center; font-size: 13px; color: #aaa; font-weight: 500; }
+
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+        /* Professional Toast */
+        #toastContainer {
+            position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
+            display: flex; flex-direction: column; align-items: center; width: 90%;
+            pointer-events: none; z-index: 6000;
+        }
+
+        .toast {
+            background-color: #2b2b2b; color: #ffffff; padding: 12px 24px; border-radius: 30px;
+            font-size: 14px; margin-top: 10px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+            opacity: 0; animation: fadeInOut 3s forwards; text-align: center; letter-spacing: 0.5px;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateY(20px) scale(0.9); }
+            15% { opacity: 1; transform: translateY(0) scale(1); }
+            85% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-20px) scale(0.9); }
+        }
+
+        /* Premium Home Screen */
+        .home-screen { display: none; flex-direction: column; height: 100%; background-color: #f5f7fa; position: relative; }
+
+        .toolbar {
+            display: flex; align-items: center; background: linear-gradient(135deg, #0f4c81, #1664a5);
+            color: white; padding: 10px 15px; box-shadow: 0 4px 15px rgba(15, 76, 129, 0.2);
+            z-index: 10; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;
+        }
+        .toolbar img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; margin-right: 12px; border: 2px solid rgba(255, 255, 255, 0.8); }
+        .toolbar h1 { font-size: 16px; font-weight: 600; letter-spacing: 0.5px; }
+
+        .banner-container {
+            width: calc(100% - 30px); margin: 15px auto; height: 140px; background-color: #ddd;
+            border-radius: 16px; overflow: hidden; position: relative; box-shadow: 0 6px 15px rgba(0,0,0,0.08); 
+        }
+        .banner-container img { width: 100%; height: 100%; object-fit: cover; }
+
+        .tabs-header { display: flex; background-color: #eaeef3; border-radius: 12px; margin: 5px 15px 15px 15px; padding: 4px; }
+        .tab-btn { flex: 1; text-align: center; padding: 10px 0; font-size: 14px; font-weight: 600; color: #666; cursor: pointer; border-radius: 8px; transition: all 0.3s ease; }
+        .tab-btn.active { background-color: #ffffff; color: #0f4c81; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+
+        .tab-content-container { flex: 1; overflow-y: auto; padding: 0 15px 70px 15px; }
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Realtime Grid Cards with Timer Badge */
+        .grid-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding-top: 5px; }
+        .grid-item {
+            background: #ffffff; border-radius: 14px; padding: 12px 6px; display: flex; flex-direction: column;
+            align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.03); text-align: center;
+            border: 1px solid rgba(0,0,0,0.02); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; position: relative;
+        }
+        .grid-item:active { transform: scale(0.95); background-color: #f9f9f9; }
+        .grid-item img { width: 38px; height: 38px; border-radius: 10px; object-fit: cover; margin-bottom: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .grid-item span { font-size: 11px; color: #444; font-weight: 600; word-wrap: break-word; }
+        
+        .timer-badge {
+            position: absolute; top: -5px; right: -5px; background: #e74c3c; color: white;
+            font-size: 9px; padding: 3px 6px; border-radius: 8px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .expired-badge { background: #7f8c8d; }
+
+        .upyog-content { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.02); }
+        .upyog-content h3 { color: #0f4c81; margin-bottom: 12px; font-size: 18px; }
+        .upyog-content p { font-size: 14px; color: #555; line-height: 1.6; white-space: pre-wrap; }
+
+        .bottom-nav {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 65px; background-color: #ffffff;
+            display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); 
+            z-index: 10; border-top-left-radius: 20px; border-top-right-radius: 20px;
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #a0aab5; cursor: pointer; transition: all 0.3s; width: 60px; }
+        .nav-item.active { color: #0f4c81; transform: translateY(-2px); }
+        .nav-icon { font-size: 22px; margin-bottom: 4px; }
+        .nav-text { font-size: 11px; font-weight: 600; letter-spacing: 0.3px; }
+
+        /* Dialogs */
+        .modal-overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 3000; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
+        .modal-content { background: white; width: 85%; max-width: 320px; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: flex; flex-direction: column; align-items: center; animation: popIn 0.3s ease; }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-content h3 { color: #0f4c81; margin-bottom: 15px; font-size: 22px; }
+        .modal-content p { color: #555; font-size: 15px; margin-bottom: 8px; width: 100%; text-align: left; font-weight: 500;}
+        .info-box { background: #f4f6f9; padding: 10px; border-radius: 10px; width: 100%; margin-bottom: 15px; }
+
+        .btn-red { background-color: #e74c3c; box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3); }
+        .btn-red:hover { background-color: #c0392b; }
+        .btn-gray { background-color: #7f8c8d; box-shadow: none; margin-top: 15px;}
+        .btn-gray:hover { background-color: #636e72; }
+
+        /* =========================================
+           NEW FULL-SCREEN ADMIN DASHBOARD
+           ========================================= */
+        .admin-screen {
+            display: none; flex-direction: column; height: 100%; width: 100%;
+            background-color: #f0f4f8; position: absolute; top: 0; left: 0; z-index: 5000; overflow-y: auto;
+        }
+        .admin-header { background: #0a355c; color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .admin-header h2 { font-size: 20px; }
+        .admin-close { background: white; color: #0a355c; padding: 5px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 12px;}
+        
+        .admin-card { background: white; margin: 15px; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .admin-card h3 { color: #333; margin-bottom: 15px; font-size: 16px; border-bottom: 2px solid #eee; padding-bottom: 5px;}
+        .modal-input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
+        
+        .time-row { display: flex; gap: 5px; margin-bottom: 10px; }
+        .time-row input { width: 25%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; text-align: center; }
+        
+        .admin-list-item { display: flex; justify-content: space-between; align-items: center; background: #f9f9f9; padding: 10px; margin-bottom: 8px; border-radius: 8px; border: 1px solid #eee; }
+        .admin-list-item .details { display: flex; flex-direction: column; width: 60%; }
+        .admin-list-item strong { font-size: 13px; color: #0f4c81; }
+        .admin-list-item small { font-size: 11px; color: #777; }
+        .admin-actions button { padding: 5px 10px; border: none; border-radius: 5px; color: white; font-size: 11px; cursor: pointer; margin-left: 5px; }
+        .btn-edit { background: #f39c12; }
+        .btn-del { background: #e74c3c; }
+        .btn-block { background: #e74c3c; }
+        .btn-unblock { background: #2ecc71; }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <div id="splashScreen" class="splash-screen">
+            <img src="https://i.postimg.cc/hPFnxrK3/1772438445908.png" alt="App Logo">
+            <div class="app-name">Jio Network 2</div>
+            <div class="studio-footer">Developed by RANU DIGITAL STUDIO</div>
+        </div>
+
+        <div id="loginScreen" class="auth-screen">
+            <img src="https://i.postimg.cc/hPFnxrK3/1772438445908.png" alt="App Logo">
+            <h2>Welcome Back!</h2>
+            <div class="input-group"><input type="email" id="loginEmail" placeholder="Email Address" required></div>
+            <div class="input-group"><input type="password" id="loginPass" placeholder="Password" required></div>
+            <button class="btn" onclick="processLogin()">Login</button>
+            <p class="switch-text">New here? <span onclick="showScreen('registerScreen')">Create an account</span></p>
+            <div class="studio-footer">RANU DIGITAL STUDIO</div>
+        </div>
+
+        <div id="registerScreen" class="auth-screen">
+            <img src="https://i.postimg.cc/hPFnxrK3/1772438445908.png" alt="App Logo">
+            <h2>Create Account</h2>
+            <div class="input-group"><input type="text" id="regName" placeholder="Full Name" required></div>
+            <div class="input-group"><input type="email" id="regEmail" placeholder="Email Address" required></div>
+            <div class="input-group"><input type="password" id="regPass" placeholder="Password" required></div>
+            <button class="btn" onclick="processRegister()">Register</button>
+            <p class="switch-text">Already have an account? <span onclick="showScreen('loginScreen')">Login</span></p>
+            <div class="studio-footer">RANU DIGITAL STUDIO</div>
+        </div>
+
+        <div id="homeScreen" class="home-screen">
+            <div class="toolbar">
+                <img src="https://i.postimg.cc/hPFnxrK3/1772438445908.png" alt="App Logo">
+                <h1>Jio Network 2</h1>
+            </div>
+            <div class="banner-container">
+                <img id="homeBannerImg" src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" alt="Banner Image">
+            </div>
+
+            <div class="tabs-header">
+                <div class="tab-btn active" id="btnFiles" onclick="switchTab('files')">Files</div>
+                <div class="tab-btn" id="btnUpyog" onclick="switchTab('upyog')">Upyog</div>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tabFiles" class="tab-content active">
+                    <div class="grid-container" id="realtimeFilesGrid">
+                        </div>
+                </div>
+                <div id="tabUpyog" class="tab-content">
+                    <div class="upyog-content">
+                        <h3>App Kaise Chalega?</h3>
+                        <p id="realtimeUpyogText">Loading details from server...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-nav">
+                <div class="nav-item active" onclick="switchTab('files')">
+                    <div class="nav-icon">🏠</div><div class="nav-text">Home</div>
+                </div>
+                <div class="nav-item" onclick="showToast('Share link copied!')">
+                    <div class="nav-icon">📤</div><div class="nav-text">Share</div>
+                </div>
+                <div class="nav-item" onclick="openProfile()">
+                    <div class="nav-icon">👤</div><div class="nav-text">Profile</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="profileModal" class="modal-overlay">
+            <div class="modal-content">
+                <h3>My Profile</h3>
+                <div class="info-box">
+                    <p id="proName">Name: Loading...</p>
+                    <p id="proEmail">Email: Loading...</p>
+                </div>
+                <button id="adminBtn" class="btn btn-red" style="display:none;" onclick="showScreen('adminScreen')">Open Admin Dashboard</button>
+                <button class="btn" onclick="logout()">Logout</button>
+                <button class="btn btn-gray" onclick="closeModal('profileModal')">Close</button>
+            </div>
+        </div>
+
+        <div id="adminScreen" class="admin-screen">
+            <div class="admin-header">
+                <h2>Admin Pro Panel</h2>
+                <div class="admin-close" onclick="showScreen('homeScreen')">View App</div>
+            </div>
+
+            <div class="admin-card">
+                <h3>App Settings (Banner & Upyog)</h3>
+                <input type="text" id="adminBannerUrl" class="modal-input" placeholder="Slider Image URL">
+                <textarea id="adminUpyogText" class="modal-input" rows="3" placeholder="App guidelines..."></textarea>
+                <button class="btn" onclick="saveAppSettings()">Update Settings</button>
+            </div>
+
+            <div class="admin-card">
+                <h3 id="fileFormTitle">Add New File</h3>
+                <input type="hidden" id="editFileId" value="">
+                <input type="text" id="addFileName" class="modal-input" placeholder="File Name (e.g. Jio Tools)">
+                <input type="text" id="addFileLogo" class="modal-input" placeholder="Logo Image URL">
+                <input type="text" id="addFileLink" class="modal-input" placeholder="Download Link (URL)">
+                
+                <p style="font-size:12px; color:#555; margin-bottom:5px;">Set Live Timer (Online Time Based):</p>
+                <div class="time-row">
+                    <input type="number" id="timeD" placeholder="Days" value="0">
+                    <input type="number" id="timeH" placeholder="Hrs" value="0">
+                    <input type="number" id="timeM" placeholder="Min" value="0">
+                    <input type="number" id="timeS" placeholder="Sec" value="0">
+                </div>
+                
+                <button class="btn btn-red" id="saveFileBtn" onclick="saveFile()">Upload File</button>
+                <button class="btn btn-gray" id="cancelEditBtn" style="display:none;" onclick="resetFileForm()">Cancel Edit</button>
+            </div>
+
+            <div class="admin-card">
+                <h3>Manage Files</h3>
+                <div id="adminFilesList"></div>
+            </div>
+
+            <div class="admin-card" style="margin-bottom: 50px;">
+                <h3>Manage Users (Block/Unblock)</h3>
+                <div id="adminUsersList"></div>
+            </div>
+        </div>
+
+        <div id="toastContainer"></div>
+    </div>
+
+    <script>
+        // FIREBASE CONFIGURATION
+        const firebaseConfig = {
+            apiKey: "AIzaSyCTemISukERV6xKIi_iAx7ojq9HBjfVjR4",
+            authDomain: "ranu-1ee11.firebaseapp.com",
+            databaseURL: "https://ranu-1ee11-default-rtdb.firebaseio.com",
+            projectId: "ranu-1ee11",
+            storageBucket: "ranu-1ee11.firebasestorage.app",
+            messagingSenderId: "320495755174",
+            appId: "1:320495755174:android:6ccbd7033a411bf8e6f967"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+
+        // GLOBALS
+        let serverTimeOffset = 0; // Difference between local and real online time
+        let globalFiles = {};
+        let countdownInterval;
+
+        // UI HELPERS
+        function showToast(message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.classList.add('toast');
+            toast.innerText = message;
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 3000);
+        }
+
+        function showScreen(screenId) {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('registerScreen').style.display = 'none';
+            document.getElementById('homeScreen').style.display = 'none';
+            document.getElementById('splashScreen').style.display = 'none';
+            document.getElementById('adminScreen').style.display = 'none';
+            document.getElementById(screenId).style.display = 'flex';
+            if(screenId === 'homeScreen') startTimers();
+            else clearInterval(countdownInterval);
+        }
+
+        function switchTab(tabName) {
+            document.getElementById('tabFiles').classList.remove('active');
+            document.getElementById('tabUpyog').classList.remove('active');
+            document.getElementById('btnFiles').classList.remove('active');
+            document.getElementById('btnUpyog').classList.remove('active');
+
+            if(tabName === 'files') {
+                document.getElementById('tabFiles').classList.add('active');
+                document.getElementById('btnFiles').classList.add('active');
+            } else if(tabName === 'upyog') {
+                document.getElementById('tabUpyog').classList.add('active');
+                document.getElementById('btnUpyog').classList.add('active');
+            }
+        }
+        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+
+        // =========================================
+        // ONLINE TIME API (Anti-Cheat)
+        // =========================================
+        async function fetchRealTime() {
+            try {
+                let res = await fetch('http://worldtimeapi.org/api/timezone/Etc/UTC');
+                let data = await res.json();
+                let onlineTime = new Date(data.datetime).getTime();
+                serverTimeOffset = onlineTime - Date.now();
+                console.log("Online Time Synced. Offset:", serverTimeOffset);
+            } catch(e) {
+                console.log("Failed to sync time, using local");
+            }
+        }
+        
+        function getTrueTime() { return Date.now() + serverTimeOffset; }
+
+        // =========================================
+        // AUTH & BLOCKING LOGIC
+        // =========================================
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // Check if Blocked
+                db.ref('users/' + user.uid + '/isBlocked').once('value').then(snap => {
+                    if(snap.val() === true && user.email !== 'admin@ranu.com') {
+                        auth.signOut();
+                        showToast("You have been BLOCKED by Admin.");
+                        showScreen('loginScreen');
+                    } else {
+                        // Not blocked, sync time and enter
+                        fetchRealTime().then(() => {
+                            if(user.email === 'admin@ranu.com') {
+                                setTimeout(() => { showScreen('adminScreen'); loadAdminData(); fetchHomeData(); }, 2000);
+                            } else {
+                                setTimeout(() => { showScreen('homeScreen'); fetchHomeData(); }, 2000);
+                            }
+                        });
+                    }
+                });
+            } else {
+                setTimeout(() => { showScreen('loginScreen'); }, 15000);
+            }
+        });
+
+        function processRegister() {
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const pass = document.getElementById('regPass').value;
+            if(!name || !email || !pass) return showToast("Fill all fields!");
+
+            showToast("Creating account...");
+            auth.createUserWithEmailAndPassword(email, pass).then((cred) => {
+                db.ref('users/' + cred.user.uid).set({ fullName: name, email: email, isBlocked: false });
+                showToast("Account Created!");
+            }).catch(e => showToast(e.message));
+        }
+
+        function processLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPass').value;
+            if(!email || !pass) return showToast("Enter credentials!");
+            showToast("Verifying...");
+            auth.signInWithEmailAndPassword(email, pass).catch(e => showToast(e.message));
+        }
+
+        function logout() {
+            auth.signOut().then(() => { closeModal('profileModal'); showToast("Logged out"); });
+        }
+
+        // =========================================
+        // FETCH DATA FOR HOME SCREEN
+        // =========================================
+        function fetchHomeData() {
+            // App Settings (Banner & Upyog)
+            db.ref('settings').on('value', snap => {
+                if(snap.exists()) {
+                    if(snap.val().bannerUrl) document.getElementById('homeBannerImg').src = snap.val().bannerUrl;
+                    if(snap.val().upyogText) document.getElementById('realtimeUpyogText').innerText = snap.val().upyogText;
+                    
+                    // Update admin fields too
+                    document.getElementById('adminBannerUrl').value = snap.val().bannerUrl || '';
+                    document.getElementById('adminUpyogText').value = snap.val().upyogText || '';
+                }
+            });
+
+            // Files
+            db.ref('files').on('value', snap => {
+                globalFiles = snap.val() || {};
+                renderHomeFiles();
+                renderAdminFiles();
+            });
+        }
+
+        function renderHomeFiles() {
+            const grid = document.getElementById('realtimeFilesGrid');
+            grid.innerHTML = '';
+            if(Object.keys(globalFiles).length === 0) {
+                grid.innerHTML = '<span style="grid-column: span 4; color: gray;">No files available.</span>';
+                return;
+            }
+            
+            for(let key in globalFiles) {
+                const data = globalFiles[key];
+                grid.innerHTML += `
+                    <div class="grid-item" id="card_${key}" onclick="handleFileClick('${key}', '${data.link}')">
+                        <div id="badge_${key}" class="timer-badge">...</div>
+                        <img src="${data.logo}" alt="Logo">
+                        <span>${data.name}</span>
+                    </div>
+                `;
+            }
+            startTimers();
+        }
+
+        function handleFileClick(key, link) {
+            const endTime = globalFiles[key].endTime;
+            if(endTime && getTrueTime() >= endTime) {
+                showToast("This link has Expired!");
+            } else {
+                window.open(link, '_blank');
+            }
+        }
+
+        function startTimers() {
+            clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => {
+                const now = getTrueTime();
+                for(let key in globalFiles) {
+                    const badge = document.getElementById(`badge_${key}`);
+                    if(!badge) continue;
+
+                    const end = globalFiles[key].endTime;
+                    if(!end) { badge.style.display = 'none'; continue; }
+
+                    const diff = end - now;
+                    if(diff <= 0) {
+                        badge.innerText = "Expired";
+                        badge.classList.add('expired-badge');
+                        document.getElementById(`card_${key}`).style.opacity = '0.6';
+                    } else {
+                        badge.classList.remove('expired-badge');
+                        document.getElementById(`card_${key}`).style.opacity = '1';
+                        // Convert MS to format
+                        let d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                        let h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                        let m = Math.floor((diff / 1000 / 60) % 60);
+                        let s = Math.floor((diff / 1000) % 60);
+                        
+                        let text = "";
+                        if(d>0) text += d + "d ";
+                        if(h>0 || d>0) text += h + "h ";
+                        text += m + "m " + s + "s";
+                        badge.innerText = text;
+                        badge.style.display = 'block';
+                    }
+                }
+            }, 1000);
+        }
+
+        // =========================================
+        // ADMIN DASHBOARD LOGIC
+        // =========================================
+        function saveAppSettings() {
+            const banner = document.getElementById('adminBannerUrl').value;
+            const upyog = document.getElementById('adminUpyogText').value;
+            db.ref('settings').update({ bannerUrl: banner, upyogText: upyog }).then(() => showToast("Settings Updated!"));
+        }
+
+        function saveFile() {
+            const id = document.getElementById('editFileId').value;
+            const name = document.getElementById('addFileName').value;
+            const logo = document.getElementById('addFileLogo').value;
+            const link = document.getElementById('addFileLink').value;
+            
+            const d = parseInt(document.getElementById('timeD').value) || 0;
+            const h = parseInt(document.getElementById('timeH').value) || 0;
+            const m = parseInt(document.getElementById('timeM').value) || 0;
+            const s = parseInt(document.getElementById('timeS').value) || 0;
+
+            if(!name || !logo || !link) return showToast("Fill file details!");
+
+            let endTime = null;
+            if(d>0 || h>0 || m>0 || s>0) {
+                const durationMs = (d*86400 + h*3600 + m*60 + s) * 1000;
+                endTime = getTrueTime() + durationMs;
+            }
+
+            const fileData = { name, logo, link, endTime };
+
+            if(id) {
+                // Editing existing
+                db.ref('files/' + id).update(fileData).then(() => { showToast("File Updated!"); resetFileForm(); });
+            } else {
+                // Add new
+                db.ref('files').push(fileData).then(() => { showToast("File Added!"); resetFileForm(); });
+            }
+        }
+
+        function resetFileForm() {
+            document.getElementById('editFileId').value = '';
+            document.getElementById('addFileName').value = '';
+            document.getElementById('addFileLogo').value = '';
+            document.getElementById('addFileLink').value = '';
+            document.getElementById('timeD').value = '0'; document.getElementById('timeH').value = '0';
+            document.getElementById('timeM').value = '0'; document.getElementById('timeS').value = '0';
+            document.getElementById('fileFormTitle').innerText = 'Add New File';
+            document.getElementById('saveFileBtn').innerText = 'Upload File';
+            document.getElementById('cancelEditBtn').style.display = 'none';
+        }
+
+        function editFile(key) {
+            const data = globalFiles[key];
+            document.getElementById('editFileId').value = key;
+            document.getElementById('addFileName').value = data.name;
+            document.getElementById('addFileLogo').value = data.logo;
+            document.getElementById('addFileLink').value = data.link;
+            document.getElementById('timeD').value = '0'; document.getElementById('timeH').value = '0';
+            document.getElementById('timeM').value = '0'; document.getElementById('timeS').value = '0';
+            
+            document.getElementById('fileFormTitle').innerText = 'Edit File: ' + data.name;
+            document.getElementById('saveFileBtn').innerText = 'Update File';
+            document.getElementById('cancelEditBtn').style.display = 'inline-block';
+            showToast("Edit mode active. Change times if needed.");
+        }
+
+        function deleteFile(key) {
+            if(confirm("Are you sure you want to delete this file?")) {
+                db.ref('files/' + key).remove().then(() => showToast("File Deleted!"));
+            }
+        }
+
+        function renderAdminFiles() {
+            const list = document.getElementById('adminFilesList');
+            list.innerHTML = '';
+            for(let key in globalFiles) {
+                list.innerHTML += `
+                    <div class="admin-list-item">
+                        <div class="details">
+                            <strong>${globalFiles[key].name}</strong>
+                            <small>Link: ${globalFiles[key].link.substring(0, 20)}...</small>
+                        </div>
+                        <div class="admin-actions">
+                            <button class="btn-edit" onclick="editFile('${key}')">Edit</button>
+                            <button class="btn-del" onclick="deleteFile('${key}')">Del</button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function loadAdminData() {
+            db.ref('users').on('value', snap => {
+                const list = document.getElementById('adminUsersList');
+                list.innerHTML = '';
+                snap.forEach(child => {
+                    const u = child.val();
+                    if(u.email === 'admin@ranu.com') return; // Hide admin from block list
+                    
+                    const isBlocked = u.isBlocked === true;
+                    const btnClass = isBlocked ? 'btn-unblock' : 'btn-block';
+                    const btnText = isBlocked ? 'Unblock' : 'Block';
+                    
+                    list.innerHTML += `
+                        <div class="admin-list-item">
+                            <div class="details">
+                                <strong>${u.fullName || 'User'}</strong>
+                                <small>${u.email}</small>
+                            </div>
+                            <div class="admin-actions">
+                                <button class="${btnClass}" onclick="toggleBlock('${child.key}', ${isBlocked})">${btnText}</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        function toggleBlock(uid, currentStatus) {
+            db.ref('users/' + uid).update({ isBlocked: !currentStatus })
+              .then(() => showToast(currentStatus ? "User Unblocked!" : "User Blocked!"));
+        }
+
+        function openProfile() {
+            const user = auth.currentUser;
+            if(user) {
+                document.getElementById('proEmail').innerText = "Email: " + user.email;
+                db.ref('users/' + user.uid).once('value').then(snap => {
+                    if(snap.exists() && snap.val().fullName) document.getElementById('proName').innerText = "Name: " + snap.val().fullName;
+                    else document.getElementById('proName').innerText = "Name: User";
+                });
+                if(user.email === 'admin@ranu.com') document.getElementById('adminBtn').style.display = 'block';
+                else document.getElementById('adminBtn').style.display = 'none';
+                document.getElementById('profileModal').style.display = 'flex';
+            }
+        }
+
+    </script>
+</body>
+</html>
