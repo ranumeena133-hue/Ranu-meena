@@ -395,11 +395,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
         for (final String item : historyList) {
             TextView tv = new TextView(this);
             tv.setText(item);
-            tv.setTextColor(getResources().getColor(R.color.textDark));
+            tv.setTextColor(getResources().getColor(R.color.textColorPrimary));
             tv.setTextSize(13);
             tv.setTextStyle(android.graphics.Typeface.BOLD);
             tv.setPadding(12, 12, 12, 12);
-            tv.setBackgroundColor(getResources().getColor(R.color.historyBackground));
+            tv.setBackgroundColor(getResources().getColor(R.color.historyItemBg));
             tv.setElevation(1f);
             android.widget.LinearLayout.LayoutParams lp = new android.widget.LinearLayout.LayoutParams(
                     android.widget.LinearLayout.LayoutParams.MATCH_PARENT,

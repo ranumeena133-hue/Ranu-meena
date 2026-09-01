@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Brand -->
-    <color name="colorPrimary">#4F46E5</color>
-    <color name="colorPrimaryDark">#3730A3</color>
+    <color name="colorPrimary">#6366F1</color>
+    <color name="colorPrimaryDark">#0F172A</color>
     <color name="colorAccent">#EC4899</color>
     <color name="colorControlHighlight">#40FFFFFF</color>
     <color name="colorControlNormal">#FFFFFF</color>
@@ -11,20 +11,26 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="textColorPrimary">#FFFFFF</color>
-    <color name="textColorSecondary">#D6DCF0</color>
-    <color name="textMuted">#94A3B8</color>
-    <color name="textDark">#334155</color>
-    <color name="textNeutral">#475569</color>
+    <color name="textColorSecondary">#C7CDE5</color>
+    <color name="textMuted">#8A93B5</color>
+    <color name="textDark">#1F2433</color>
+    <color name="textNeutral">#AAB2CE</color>
+
+    <!-- Dark theme surfaces -->
+    <color name="surfaceDark">#23273D</color>
+    <color name="surfaceDarker">#161A2C</color>
+    <color name="borderLight">#33FFFFFF</color>
 
     <!-- Semantic -->
-    <color name="danger">#DC2626</color>
-    <color name="historyBackground">#F1F5F9</color>
+    <color name="danger">#F87171</color>
+    <color name="historyBackground">#23273D</color>
+    <color name="historyItemBg">#2E3250</color>
 
     <!-- Deprecated legacy keepers (used by Java) -->
-    <color name="calcBg">#4F46E5</color>
-    <color name="displayBg">#66000000</color>
+    <color name="calcBg">#10131F</color>
+    <color name="displayBg">#1F2433</color>
     <color name="btnNumber">#4D000000</color>
-    <color name="btnOperator">#804F46E5</color>
+    <color name="btnOperator">#CC4F46E5</color>
     <color name="btnAction">#80EF4444</color>
     <color name="btnEquals">#FFFFFF</color>
 </resources>
