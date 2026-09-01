@@ -1,167 +1,64 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#121212"
-    android:padding="8dp">
+package com.example.buildai;
 
-    <!-- App Header / Workspace Title -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Build Studio : AI Agent Workspace"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:padding="8dp"
-        android:gravity="center"
-        android:background="#1F1F1F"
-        android:layout_marginBottom="10dp" />
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-    <!-- LIVE AGENT STATUS BAR (Horizontal Scroll) -->
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="none"
-        android:layout_marginBottom="10dp">
-        
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+public class MainActivity extends Activity {
 
-            <!-- Agent 1: Project Manager -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#2D2D30"
-                android:padding="8dp"
-                android:layout_marginEnd="8dp"
-                android:orientation="horizontal">
-                <TextView android:layout_width="10dp" android:layout_height="10dp" android:background="#4CAF50" android:layout_gravity="center_vertical" android:layout_marginEnd="5dp"/>
-                <TextView android:id="@+id/statusManager" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Manager: Idle" android:textColor="#E0E0E0" android:textSize="12sp"/>
-            </LinearLayout>
+    private EditText userInputBox;
+    private Button sendBtn;
+    private TextView consoleLogText;
+    private ScrollView chatScrollView;
 
-            <!-- Agent 2: Developer -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#2D2D30"
-                android:padding="8dp"
-                android:layout_marginEnd="8dp"
-                android:orientation="horizontal">
-                <TextView android:layout_width="10dp" android:layout_height="10dp" android:background="#2196F3" android:layout_gravity="center_vertical" android:layout_marginEnd="5dp"/>
-                <TextView android:id="@+id/statusDev" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Dev: Waiting..." android:textColor="#E0E0E0" android:textSize="12sp"/>
-            </LinearLayout>
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
 
-            <!-- Agent 3: File Operator -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#2D2D30"
-                android:padding="8dp"
-                android:layout_marginEnd="8dp"
-                android:orientation="horizontal">
-                <TextView android:layout_width="10dp" android:layout_height="10dp" android:background="#FF9800" android:layout_gravity="center_vertical" android:layout_marginEnd="5dp"/>
-                <TextView android:id="@+id/statusFileOp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="FileOp: Ready" android:textColor="#E0E0E0" android:textSize="12sp"/>
-            </LinearLayout>
+        userInputBox = findViewById(R.id.userInputBox);
+        sendBtn = findViewById(R.id.sendBtn);
+        consoleLogText = findViewById(R.id.consoleLogText);
+        chatScrollView = findViewById(R.id.chatScrollView);
 
-            <!-- Agent 4: QA Inspector -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#2D2D30"
-                android:padding="8dp"
-                android:layout_marginEnd="8dp"
-                android:orientation="horizontal">
-                <TextView android:layout_width="10dp" android:layout_height="10dp" android:background="#9C27B0" android:layout_gravity="center_vertical" android:layout_marginEnd="5dp"/>
-                <TextView android:id="@+id/statusInspector" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="QA: Scanning..." android:textColor="#E0E0E0" android:textSize="12sp"/>
-            </LinearLayout>
+        appendConsoleLog("[Agent] AI Manager initialized.");
+        appendConsoleLog("[Agent] Connected to Termux & GitHub repository.");
 
-            <!-- Agent 5: Vision / Designer -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#2D2D30"
-                android:padding="8dp"
-                android:orientation="horizontal">
-                <TextView android:layout_width="10dp" android:layout_height="10dp" android:background="#E91E63" android:layout_gravity="center_vertical" android:layout_marginEnd="5dp"/>
-                <TextView android:id="@+id/statusVision" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Vision: Idle" android:textColor="#E0E0E0" android:textSize="12sp"/>
-            </LinearLayout>
-        </LinearLayout>
-    </HorizontalScrollView>
+        if (sendBtn != null) {
+            sendBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (userInputBox != null) {
+                        String msg = userInputBox.getText().toString().trim();
+                        if (!msg.isEmpty()) {
+                            appendConsoleLog("[User] " + msg);
+                            appendConsoleLog("[Agent] Command received: Processing '" + msg + "'...");
+                            userInputBox.setText("");
+                            Toast.makeText(MainActivity.this, "Command Sent to Agent!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            });
+        }
+    }
 
-    <!-- LIVE CONSOLE (Yahan AIs ki baatcheet dikhegi) -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="🔴 LIVE TERMINAL"
-        android:textColor="#FF5252"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="5dp"/>
-
-    <ScrollView
-        android:id="@+id/chatScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="#1E1E1E"
-        android:padding="10dp"
-        android:layout_marginBottom="10dp">
-        
-        <!-- Is layout ke andar Java code se nayi baatein add hongi -->
-        <LinearLayout
-            android:id="@+id/liveConsoleContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            
-            <!-- Demo Messages (Preview ke liye) -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="System: Monitoring /storage/emulated/0/.BUILD STUDIO/NewProject"
-                android:textColor="#888888"
-                android:textSize="13sp"
-                android:layout_marginBottom="8dp"
-                android:fontFamily="monospace"/>
-                
-        </LinearLayout>
-    </ScrollView>
-
-    <!-- COMMAND INPUT AREA -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:background="#1F1F1F"
-        android:padding="5dp">
-
-        <EditText
-            android:id="@+id/userInputBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Manager ko order do..."
-            android:textColorHint="#757575"
-            android:textColor="#FFFFFF"
-            android:background="@null"
-            android:padding="10dp"
-            android:textSize="15sp"/>
-
-        <Button
-            android:id="@+id/sendBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="SEND"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#007ACC"
-            android:minWidth="60dp"
-            android:layout_marginStart="5dp"/>
-    </LinearLayout>
-
-</LinearLayout>
+    private void appendConsoleLog(String text) {
+        if (consoleLogText != null) {
+            String current = consoleLogText.getText().toString();
+            consoleLogText.setText(current + "\n" + text);
+            if (chatScrollView != null) {
+                chatScrollView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        chatScrollView.fullScroll(View.FOCUS_DOWN);
+                    }
+                });
+            }
+        }
+    }
+}
