@@ -46,13 +46,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        // Setup button click sound
+        // Setup button click sound (media stream so it plays even in silent mode)
         AudioAttributes attrs = new AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                .setUsage(AudioAttributes.USAGE_MEDIA)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                 .build();
         soundPool = new SoundPool.Builder()
-                .setMaxStreams(4)
+                .setMaxStreams(6)
                 .setAudioAttributes(attrs)
                 .build();
         soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
@@ -213,9 +213,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     private void playSound(int soundId) {
-        if (soundPool != null && soundLoaded) {
-            soundPool.play(soundId, 1f, 1f, 1, 0, 1f);
-        }
+        if (soundPool == null || soundId <= 0) return;
+        // Try to play; SoundPool ignores this until the sample is loaded,
+        // then subsequent taps sound immediately.
+        soundPool.play(soundId, 1f, 1f, 1, 0, 1f);
     }
 
     private void appendDigit(String digit) {
