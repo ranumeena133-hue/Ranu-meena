@@ -6,6 +6,8 @@ package com.example.buildai;
  * ========================================================== */
 
 import android.app.Activity;
+import android.media.AudioAttributes;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -33,10 +35,32 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private DecimalFormat decimalFormat = new DecimalFormat("#.########");
     private ArrayList<String> historyList = new ArrayList<>();
 
+    // Button click sound
+    private SoundPool soundPool;
+    private int clickSoundId;
+    private boolean soundLoaded = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        // Setup button click sound
+        AudioAttributes attrs = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build();
+        soundPool = new SoundPool.Builder()
+                .setMaxStreams(4)
+                .setAudioAttributes(attrs)
+                .build();
+        soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+            @Override
+            public void onLoadComplete(SoundPool sp, int sampleId, int status) {
+                soundLoaded = (status == 0);
+            }
+        });
+        clickSoundId = soundPool.load(this, R.raw.click, 1);
 
         // Initialize Views
         tvExpression = findViewById(R.id.tvExpression);
@@ -54,6 +78,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             btnToggleSci.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    playClick();
                     if (panelScientific != null) {
                         if (panelScientific.getVisibility() == View.VISIBLE) {
                             panelScientific.setVisibility(View.GONE);
@@ -69,6 +94,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             btnToggleHistory.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    playClick();
                     if (panelHistory != null) {
                         if (panelHistory.getVisibility() == View.VISIBLE) {
                             panelHistory.setVisibility(View.GONE);
@@ -84,6 +110,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             btnClearHistory.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    playClick();
                     historyList.clear();
                     renderHistory();
                     Toast.makeText(MainActivity.this, "History Cleared", Toast.LENGTH_SHORT).show();
@@ -111,6 +138,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        playClick();
         int id = v.getId();
 
         if (id == R.id.btnClear) {
@@ -165,6 +193,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
             appendDigit("8");
         } else if (id == R.id.btn9) {
             appendDigit("9");
+        }
+    }
+
+    private void playClick() {
+        if (soundPool != null && soundLoaded) {
+            soundPool.play(clickSoundId, 1f, 1f, 1, 0, 1f);
         }
     }
 
@@ -360,6 +394,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    playClick();
                     // Extract result after '=' sign if present
                     if (item.contains("=")) {
                         String[] parts = item.split("=");
@@ -372,6 +407,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 }
             });
             containerHistory.addView(tv);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (soundPool != null) {
+            soundPool.release();
+            soundPool = null;
         }
     }
 
