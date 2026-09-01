@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">Calculator Pro</string>
+    <string name="calc_title" translatable="false">CALCULATOR PRO AI</string>
+    <string name="sci_label" translatable="false">SCI 🔬</string>
+    <string name="hist_label" translatable="false">HIST 📜</string>
+    <string name="history_title" translatable="false">Calculation History</string>
+    <string name="clear_history" translatable="false">Clear History</string>
+    <string name="history_empty" translatable="false">No past calculations yet.</string>
+
+    <!-- Splash -->
+    <string name="splash_title" translatable="false">CALCULATOR PRO</string>
+    <string name="splash_tagline" translatable="false">Smart, Fast &amp; Modern Calculator</string>
+    <string name="splash_footer" translatable="false">POWERED BY BUILD STUDIO AI</string>
 </resources>

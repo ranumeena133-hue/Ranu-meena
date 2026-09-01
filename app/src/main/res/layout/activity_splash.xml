@@ -19,14 +19,15 @@
             android:layout_width="110dp"
             android:layout_height="110dp"
             android:src="@drawable/app_icon"
+            android:elevation="8dp"
             android:layout_marginBottom="24dp"/>
 
         <!-- App Title -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CALCULATOR PRO"
-            android:textColor="#FFFFFF"
+            android:text="@string/splash_title"
+            android:textColor="@color/textColorPrimary"
             android:textSize="28sp"
             android:textStyle="bold"
             android:letterSpacing="0.12"
@@ -36,8 +37,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Smart, Fast &amp; Modern Calculator"
-            android:textColor="#F1F5FF"
+            android:text="@string/splash_tagline"
+            android:textColor="@color/textColorSecondary"
             android:textSize="14sp"
             android:layout_marginTop="8dp"
             android:gravity="center"/>
@@ -48,7 +49,7 @@
             android:layout_height="36dp"
             android:layout_marginTop="36dp"
             android:indeterminate="true"
-            android:indeterminateTint="#FFFFFF"/>
+            android:indeterminateTint="@color/textColorPrimary"/>
 
     </LinearLayout>
 
@@ -56,8 +57,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="POWERED BY BUILD STUDIO AI"
-        android:textColor="#FFFFFF"
+        android:text="@string/splash_footer"
+        android:textColor="@color/textColorPrimary"
         android:textSize="11sp"
         android:textStyle="bold"
         android:letterSpacing="0.15"

@@ -4,21 +4,21 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/bg_gradient"
-    android:padding="12dp">
+    android:padding="@dimen/screen_padding">
 
     <!-- Top Action Bar (Title + History + Scientific Toggle) -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp">
+        android:paddingTop="@dimen/inner_padding"
+        android:paddingBottom="@dimen/inner_padding">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CALCULATOR PRO AI"
-            android:textColor="#FFFFFF"
-            android:textSize="15sp"
+            android:text="@string/calc_title"
+            android:textColor="@color/textColorPrimary"
+            android:textSize="@dimen/text_title"
             android:textStyle="bold"
             android:letterSpacing="0.1"
             android:layout_centerVertical="true"
@@ -33,30 +33,14 @@
 
             <Button
                 android:id="@+id/btnToggleSci"
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:text="SCI 🔬"
-                android:textSize="11sp"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/bg_btn_toggle"
-                android:stateListAnimator="@null"
-                android:minWidth="50dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                style="@style/CalcToggle"
+                android:text="@string/sci_label"
                 android:layout_marginEnd="6dp"/>
 
             <Button
                 android:id="@+id/btnToggleHistory"
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:text="HIST 📜"
-                android:textSize="11sp"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/bg_btn_toggle"
-                android:stateListAnimator="@null"
-                android:minWidth="50dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"/>
+                style="@style/CalcToggle"
+                android:text="@string/hist_label"/>
         </LinearLayout>
     </RelativeLayout>
 
@@ -69,7 +53,7 @@
         android:background="@drawable/bg_history"
         android:padding="10dp"
         android:visibility="gone"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="@dimen/inner_padding">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -79,18 +63,18 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Calculation History"
-                android:textColor="#475569"
-                android:textSize="12sp"
+                android:text="@string/history_title"
+                android:textColor="@color/textNeutral"
+                android:textSize="@dimen/text_subtitle"
                 android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/btnClearHistory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Clear History"
-                android:textColor="#DC2626"
-                android:textSize="12sp"
+                android:text="@string/clear_history"
+                android:textColor="@color/danger"
+                android:textSize="@dimen/text_subtitle"
                 android:layout_alignParentEnd="true"/>
         </RelativeLayout>
 
@@ -108,9 +92,9 @@
                     android:id="@+id/tvEmptyHistory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="No past calculations yet."
-                    android:textColor="#94A3B8"
-                    android:textSize="12sp"
+                    android:text="@string/history_empty"
+                    android:textColor="@color/textMuted"
+                    android:textSize="@dimen/text_subtitle"
                     android:gravity="center"
                     android:padding="20dp"/>
             </LinearLayout>
@@ -125,8 +109,8 @@
         android:orientation="vertical"
         android:gravity="bottom|end"
         android:background="@drawable/bg_display"
-        android:padding="16dp"
-        android:layout_marginBottom="12dp">
+        android:padding="@dimen/display_padding"
+        android:layout_marginBottom="@dimen/display_margin_bottom">
 
         <!-- Expression Scroll Area -->
         <HorizontalScrollView
@@ -139,8 +123,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=""
-                android:textColor="#D6DCF0"
-                android:textSize="20sp"
+                android:textColor="@color/textColorSecondary"
+                android:textSize="@dimen/text_expression"
                 android:gravity="end"
                 android:singleLine="true"/>
         </HorizontalScrollView>
@@ -157,8 +141,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:textColor="#FFFFFF"
-                android:textSize="40sp"
+                android:textColor="@color/textColorPrimary"
+                android:textSize="@dimen/text_result"
                 android:textStyle="bold"
                 android:gravity="end"
                 android:singleLine="true"/>
@@ -169,69 +153,40 @@
     <LinearLayout
         android:id="@+id/panelScientific"
         android:layout_width="match_parent"
-        android:layout_height="54dp"
+        android:layout_height="@dimen/sci_row_height"
         android:orientation="horizontal"
         android:visibility="gone"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="@dimen/inner_padding">
 
         <Button
             android:id="@+id/btnSqrt"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            style="@style/CalcButton.Sci"
             android:text="√"
-            android:textSize="18sp"
-            android:textColor="#FFFFFF"
-            android:background="@drawable/bg_btn_sci"
-            android:stateListAnimator="@null"
             android:layout_marginEnd="6dp"/>
 
         <Button
             android:id="@+id/btnSquare"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            style="@style/CalcButton.Sci"
             android:text="x²"
             android:textSize="16sp"
-            android:textColor="#FFFFFF"
-            android:background="@drawable/bg_btn_sci"
-            android:stateListAnimator="@null"
             android:layout_marginEnd="6dp"/>
 
         <Button
             android:id="@+id/btnPower"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            style="@style/CalcButton.Sci"
             android:text="^"
-            android:textSize="18sp"
-            android:textColor="#FFFFFF"
-            android:background="@drawable/bg_btn_sci"
-            android:stateListAnimator="@null"
             android:layout_marginEnd="6dp"/>
 
         <Button
             android:id="@+id/btnPi"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            style="@style/CalcButton.Sci"
             android:text="π"
-            android:textSize="18sp"
-            android:textColor="#FFFFFF"
-            android:background="@drawable/bg_btn_sci"
-            android:stateListAnimator="@null"
             android:layout_marginEnd="6dp"/>
 
         <Button
             android:id="@+id/btnPlusMinus"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="±"
-            android:textSize="18sp"
-            android:textColor="#FFFFFF"
-            android:background="@drawable/bg_btn_sci"
-            android:stateListAnimator="@null"/>
+            style="@style/CalcButton.Sci"
+            android:text="±"/>
     </LinearLayout>
 
     <!-- Main Keypad Grid -->
@@ -243,304 +198,161 @@
         <!-- Row 1: AC, Backspace, %, ÷ -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="62dp"
+            android:layout_height="@dimen/key_row_height"
             android:orientation="horizontal"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="@dimen/key_gap">
 
             <Button
                 android:id="@+id/btnClear"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                style="@style/CalcButton.Action"
                 android:text="AC"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/bg_btn_action"
-                android:stateListAnimator="@null"
-                android:elevation="3dp"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="@dimen/key_gap"/>
 
             <Button
                 android:id="@+id/btnBack"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                style="@style/CalcButton.Number"
                 android:text="⌫"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_action"
                 android:textStyle="bold"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/bg_btn_number"
-                android:stateListAnimator="@null"
-                android:elevation="3dp"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="@dimen/key_gap"/>
 
             <Button
                 android:id="@+id/btnPercent"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                style="@style/CalcButton.Operator"
                 android:text="%"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/bg_btn_operator"
-                android:stateListAnimator="@null"
-                android:elevation="3dp"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="@dimen/key_gap"/>
 
             <Button
                 android:id="@+id/btnDivide"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="÷"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/bg_btn_operator"
-                android:stateListAnimator="@null"
-                android:elevation="3dp"/>
+                style="@style/CalcButton.Operator"
+                android:text="÷"/>
         </LinearLayout>
 
         <!-- Row 2: 7, 8, 9, × -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="62dp"
+            android:layout_height="@dimen/key_row_height"
             android:orientation="horizontal"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="@dimen/key_gap">
 
             <Button
                 android:id="@+id/btn7"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                style="@style/CalcButton.Number"
                 android:text="7"
-                android:textSize="20sp"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/bg_btn_number"
-                android:stateListAnimator="@null"
-                android:elevation="3dp"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="@dimen/key_gap"/>
 
             <Button
                 android:id="@+id/btn8"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                style="@style/CalcButton.Number"
                 android:text="8"
-                android:textSize="20sp"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/bg_btn_number"
-                android:stateListAnimator="@null"
-                android:elevation="3dp"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="@dimen/key_gap"/>
 
             <Button
                 android:id="@+id/btn9"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                style="@style/CalcButton.Number"
                 android:text="9"
-                android:textSize="20sp"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/bg_btn_number"
-                android:stateListAnimator="@null"
-                android:elevation="3dp"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="@dimen/key_gap"/>
 
             <Button
                 android:id="@+id/btnMultiply"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="×"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/bg_btn_operator"
-                android:stateListAnimator="@null"
-                android:elevation="3dp"/>
+                style="@style/CalcButton.Operator"
+                android:text="×"/>
         </LinearLayout>
 
         <!-- Row 3: 4, 5, 6, - -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="62dp"
+            android:layout_height="@dimen/key_row_height"
             android:orientation="horizontal"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="@dimen/key_gap">
 
             <Button
                 android:id="@+id/btn4"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                style="@style/CalcButton.Number"
                 android:text="4"
-                android:textSize="20sp"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/bg_btn_number"
-                android:stateListAnimator="@null"
-                android:elevation="3dp"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="@dimen/key_gap"/>
 
             <Button
                 android:id="@+id/btn5"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                style="@style/CalcButton.Number"
                 android:text="5"
-                android:textSize="20sp"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/bg_btn_number"
-                android:stateListAnimator="@null"
-                android:elevation="3dp"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="@dimen/key_gap"/>
 
             <Button
                 android:id="@+id/btn6"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                style="@style/CalcButton.Number"
                 android:text="6"
-                android:textSize="20sp"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/bg_btn_number"
-                android:stateListAnimator="@null"
-                android:elevation="3dp"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="@dimen/key_gap"/>
 
             <Button
                 android:id="@+id/btnMinus"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="-"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/bg_btn_operator"
-                android:stateListAnimator="@null"
-                android:elevation="3dp"/>
+                style="@style/CalcButton.Operator"
+                android:text="-"/>
         </LinearLayout>
 
         <!-- Row 4: 1, 2, 3, + -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="62dp"
+            android:layout_height="@dimen/key_row_height"
             android:orientation="horizontal"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="@dimen/key_gap">
 
             <Button
                 android:id="@+id/btn1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                style="@style/CalcButton.Number"
                 android:text="1"
-                android:textSize="20sp"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/bg_btn_number"
-                android:stateListAnimator="@null"
-                android:elevation="3dp"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="@dimen/key_gap"/>
 
             <Button
                 android:id="@+id/btn2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                style="@style/CalcButton.Number"
                 android:text="2"
-                android:textSize="20sp"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/bg_btn_number"
-                android:stateListAnimator="@null"
-                android:elevation="3dp"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="@dimen/key_gap"/>
 
             <Button
                 android:id="@+id/btn3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                style="@style/CalcButton.Number"
                 android:text="3"
-                android:textSize="20sp"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/bg_btn_number"
-                android:stateListAnimator="@null"
-                android:elevation="3dp"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="@dimen/key_gap"/>
 
             <Button
                 android:id="@+id/btnPlus"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="+"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/bg_btn_operator"
-                android:stateListAnimator="@null"
-                android:elevation="3dp"/>
+                style="@style/CalcButton.Operator"
+                android:text="+"/>
         </LinearLayout>
 
         <!-- Row 5: ( ), 0, ., = -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="62dp"
+            android:layout_height="@dimen/key_row_height"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btnBracket"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                style="@style/CalcButton.Number"
                 android:text="( )"
-                android:textSize="18sp"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/bg_btn_number"
-                android:stateListAnimator="@null"
-                android:elevation="3dp"
-                android:layout_marginEnd="8dp"/>
+                android:textSize="@dimen/text_action"
+                android:layout_marginEnd="@dimen/key_gap"/>
 
             <Button
                 android:id="@+id/btn0"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                style="@style/CalcButton.Number"
                 android:text="0"
-                android:textSize="20sp"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/bg_btn_number"
-                android:stateListAnimator="@null"
-                android:elevation="3dp"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="@dimen/key_gap"/>
 
             <Button
                 android:id="@+id/btnDot"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                style="@style/CalcButton.Number"
                 android:text="."
-                android:textSize="22sp"
+                android:textSize="@dimen/text_operator"
                 android:textStyle="bold"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/bg_btn_number"
-                android:stateListAnimator="@null"
-                android:elevation="3dp"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="@dimen/key_gap"/>
 
             <Button
                 android:id="@+id/btnEquals"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                style="@style/CalcButton.Equals"
                 android:text="="
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="#4F46E5"
-                android:background="@drawable/bg_btn_equals"
-                android:stateListAnimator="@null"
-                android:elevation="3dp"/>
+                android:textSize="24sp"/>
         </LinearLayout>
 
     </LinearLayout>

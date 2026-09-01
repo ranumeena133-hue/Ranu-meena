@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Brand -->
     <color name="colorPrimary">#4F46E5</color>
     <color name="colorPrimaryDark">#3730A3</color>
     <color name="colorAccent">#EC4899</color>
     <color name="colorControlHighlight">#40FFFFFF</color>
     <color name="colorControlNormal">#FFFFFF</color>
 
+    <!-- Core palette -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="textColorSecondary">#D6DCF0</color>
+    <color name="textMuted">#94A3B8</color>
+    <color name="textDark">#334155</color>
+    <color name="textNeutral">#475569</color>
+
+    <!-- Semantic -->
+    <color name="danger">#DC2626</color>
+    <color name="historyBackground">#F1F5F9</color>
+
+    <!-- Deprecated legacy keepers (used by Java) -->
     <color name="calcBg">#4F46E5</color>
     <color name="displayBg">#66000000</color>
     <color name="btnNumber">#4D000000</color>
     <color name="btnOperator">#804F46E5</color>
     <color name="btnAction">#80EF4444</color>
     <color name="btnEquals">#FFFFFF</color>
-    <color name="textColorPrimary">#FFFFFF</color>
-    <color name="textColorSecondary">#D6DCF0</color>
 </resources>

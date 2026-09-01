@@ -10,4 +10,63 @@
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
+
+    <!-- Base calculator key button: uniform sizing, white text, disabled elevation animation -->
+    <style name="CalcButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:elevation">@dimen/btn_elevation</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <!-- Number keys -->
+    <style name="CalcButton.Number">
+        <item name="android:background">@drawable/bg_btn_number</item>
+        <item name="android:textSize">@dimen/text_number</item>
+    </style>
+
+    <!-- Operator keys (+ - × ÷ %) -->
+    <style name="CalcButton.Operator">
+        <item name="android:background">@drawable/bg_btn_operator</item>
+        <item name="android:textSize">@dimen/text_operator</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Action keys (AC / backspace) -->
+    <style name="CalcButton.Action">
+        <item name="android:background">@drawable/bg_btn_action</item>
+        <item name="android:textSize">@dimen/text_action</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Equals key -->
+    <style name="CalcButton.Equals">
+        <item name="android:background">@drawable/bg_btn_equals</item>
+        <item name="android:textSize">@dimen/text_operator</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <!-- Scientific keys -->
+    <style name="CalcButton.Sci">
+        <item name="android:background">@drawable/bg_btn_sci</item>
+        <item name="android:textSize">@dimen/text_sci</item>
+    </style>
+
+    <!-- Toggle chips (SCI / HIST) -->
+    <style name="CalcToggle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/toggle_btn_height</item>
+        <item name="android:minWidth">@dimen/toggle_min_width</item>
+        <item name="android:paddingStart">@dimen/toggle_padding</item>
+        <item name="android:paddingEnd">@dimen/toggle_padding</item>
+        <item name="android:textSize">@dimen/text_toggle</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:background">@drawable/bg_btn_toggle</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
 </resources>
