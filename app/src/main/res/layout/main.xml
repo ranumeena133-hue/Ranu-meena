@@ -6,20 +6,116 @@
     android:background="#161622"
     android:padding="12dp">
 
-    <!-- Header Title -->
-    <TextView
+    <!-- Top Action Bar (Title + History + Scientific Toggle) -->
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="CALCULATOR PRO"
-        android:textColor="#A0A0B0"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:letterSpacing="0.15"
-        android:paddingTop="12dp"
-        android:paddingBottom="8dp"/>
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
-    <!-- Display Area -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CALCULATOR PRO AI"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.1"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true">
+
+            <Button
+                android:id="@+id/btnToggleSci"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="SCI 🔬"
+                android:textSize="11sp"
+                android:textColor="#6C5CE7"
+                android:backgroundTint="#2A2A3C"
+                android:minWidth="50dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:layout_marginEnd="6dp"/>
+
+            <Button
+                android:id="@+id/btnToggleHistory"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="HIST 📜"
+                android:textSize="11sp"
+                android:textColor="#06B6D4"
+                android:backgroundTint="#2A2A3C"
+                android:minWidth="50dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- History Panel (Collapsible Overlay Panel) -->
+    <LinearLayout
+        android:id="@+id/panelHistory"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:orientation="vertical"
+        android:background="#1E1E2C"
+        android:padding="10dp"
+        android:visibility="gone"
+        android:layout_marginBottom="8dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Calculation History"
+                android:textColor="#A0A0B0"
+                android:textSize="12sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/btnClearHistory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Clear History"
+                android:textColor="#FF4757"
+                android:textSize="12sp"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+
+        <ScrollView
+            android:id="@+id/scrollHistory"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            
+            <LinearLayout
+                android:id="@+id/containerHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tvEmptyHistory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No past calculations yet."
+                    android:textColor="#666677"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:padding="20dp"/>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <!-- Main Display Area -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -27,10 +123,10 @@
         android:orientation="vertical"
         android:gravity="bottom|end"
         android:background="#1E1E2C"
-        android:padding="20dp"
-        android:layout_marginBottom="16dp">
+        android:padding="16dp"
+        android:layout_marginBottom="12dp">
 
-        <!-- History / Expression Text -->
+        <!-- Expression Scroll Area -->
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,17 +138,17 @@
                 android:layout_height="wrap_content"
                 android:text=""
                 android:textColor="#A0A0B0"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:gravity="end"
                 android:singleLine="true"/>
         </HorizontalScrollView>
 
-        <!-- Main Result Text -->
+        <!-- Result Display Area -->
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="none"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="6dp"
             android:fillViewport="true">
             <TextView
                 android:id="@+id/tvResult"
@@ -60,14 +156,78 @@
                 android:layout_height="wrap_content"
                 android:text="0"
                 android:textColor="#FFFFFF"
-                android:textSize="44sp"
+                android:textSize="40sp"
                 android:textStyle="bold"
                 android:gravity="end"
                 android:singleLine="true"/>
         </HorizontalScrollView>
     </LinearLayout>
 
-    <!-- Keypad Grid -->
+    <!-- Scientific Panel (Collapsible Row) -->
+    <LinearLayout
+        android:id="@+id/panelScientific"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:layout_marginBottom="8dp">
+
+        <Button
+            android:id="@+id/btnSqrt"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="√"
+            android:textSize="18sp"
+            android:textColor="#06B6D4"
+            android:backgroundTint="#2A2A3C"
+            android:layout_marginEnd="6dp"/>
+
+        <Button
+            android:id="@+id/btnSquare"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="x²"
+            android:textSize="16sp"
+            android:textColor="#06B6D4"
+            android:backgroundTint="#2A2A3C"
+            android:layout_marginEnd="6dp"/>
+
+        <Button
+            android:id="@+id/btnPower"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="^"
+            android:textSize="18sp"
+            android:textColor="#06B6D4"
+            android:backgroundTint="#2A2A3C"
+            android:layout_marginEnd="6dp"/>
+
+        <Button
+            android:id="@+id/btnPi"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="π"
+            android:textSize="18sp"
+            android:textColor="#06B6D4"
+            android:backgroundTint="#2A2A3C"
+            android:layout_marginEnd="6dp"/>
+
+        <Button
+            android:id="@+id/btnPlusMinus"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="±"
+            android:textSize="18sp"
+            android:textColor="#06B6D4"
+            android:backgroundTint="#2A2A3C"/>
+    </LinearLayout>
+
+    <!-- Main Keypad Grid -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -76,9 +236,9 @@
         <!-- Row 1: AC, Backspace, %, ÷ -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="62dp"
             android:orientation="horizontal"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="6dp">
 
             <Button
                 android:id="@+id/btnClear"
@@ -86,11 +246,11 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="AC"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#FF4757"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="6dp"/>
 
             <Button
                 android:id="@+id/btnBack"
@@ -98,11 +258,11 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="⌫"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#3D3B54"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="6dp"/>
 
             <Button
                 android:id="@+id/btnPercent"
@@ -110,11 +270,11 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="%"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="#6C5CE7"
                 android:backgroundTint="#3D3B54"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="6dp"/>
 
             <Button
                 android:id="@+id/btnDivide"
@@ -122,7 +282,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="÷"
-                android:textSize="24sp"
+                android:textSize="22sp"
                 android:textStyle="bold"
                 android:textColor="#6C5CE7"
                 android:backgroundTint="#3D3B54"/>
@@ -131,9 +291,9 @@
         <!-- Row 2: 7, 8, 9, × -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="62dp"
             android:orientation="horizontal"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="6dp">
 
             <Button
                 android:id="@+id/btn7"
@@ -141,10 +301,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="7"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#2A2A3C"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="6dp"/>
 
             <Button
                 android:id="@+id/btn8"
@@ -152,10 +312,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="8"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#2A2A3C"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="6dp"/>
 
             <Button
                 android:id="@+id/btn9"
@@ -163,10 +323,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="9"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#2A2A3C"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="6dp"/>
 
             <Button
                 android:id="@+id/btnMultiply"
@@ -174,7 +334,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="×"
-                android:textSize="24sp"
+                android:textSize="22sp"
                 android:textStyle="bold"
                 android:textColor="#6C5CE7"
                 android:backgroundTint="#3D3B54"/>
@@ -183,9 +343,9 @@
         <!-- Row 3: 4, 5, 6, - -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="62dp"
             android:orientation="horizontal"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="6dp">
 
             <Button
                 android:id="@+id/btn4"
@@ -193,10 +353,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="4"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#2A2A3C"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="6dp"/>
 
             <Button
                 android:id="@+id/btn5"
@@ -204,10 +364,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="5"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#2A2A3C"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="6dp"/>
 
             <Button
                 android:id="@+id/btn6"
@@ -215,10 +375,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="6"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#2A2A3C"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="6dp"/>
 
             <Button
                 android:id="@+id/btnMinus"
@@ -226,7 +386,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="-"
-                android:textSize="24sp"
+                android:textSize="22sp"
                 android:textStyle="bold"
                 android:textColor="#6C5CE7"
                 android:backgroundTint="#3D3B54"/>
@@ -235,9 +395,9 @@
         <!-- Row 4: 1, 2, 3, + -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="62dp"
             android:orientation="horizontal"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="6dp">
 
             <Button
                 android:id="@+id/btn1"
@@ -245,10 +405,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="1"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#2A2A3C"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="6dp"/>
 
             <Button
                 android:id="@+id/btn2"
@@ -256,10 +416,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="2"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#2A2A3C"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="6dp"/>
 
             <Button
                 android:id="@+id/btn3"
@@ -267,10 +427,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="3"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#2A2A3C"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="6dp"/>
 
             <Button
                 android:id="@+id/btnPlus"
@@ -278,16 +438,16 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="+"
-                android:textSize="24sp"
+                android:textSize="22sp"
                 android:textStyle="bold"
                 android:textColor="#6C5CE7"
                 android:backgroundTint="#3D3B54"/>
         </LinearLayout>
 
-        <!-- Row 5: (, 0, ., = -->
+        <!-- Row 5: ( ), 0, ., = -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="62dp"
             android:orientation="horizontal">
 
             <Button
@@ -296,10 +456,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="( )"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textColor="#A0A0B0"
                 android:backgroundTint="#2A2A3C"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="6dp"/>
 
             <Button
                 android:id="@+id/btn0"
@@ -307,10 +467,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="0"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#2A2A3C"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="6dp"/>
 
             <Button
                 android:id="@+id/btnDot"
@@ -318,11 +478,11 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="."
-                android:textSize="24sp"
+                android:textSize="22sp"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#2A2A3C"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="6dp"/>
 
             <Button
                 android:id="@+id/btnEquals"
@@ -330,7 +490,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="="
-                android:textSize="26sp"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#6C5CE7"/>

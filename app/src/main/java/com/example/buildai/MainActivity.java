@@ -1,25 +1,37 @@
 package com.example.buildai;
 
 /* ==========================================================
- *  BUILD STUDIO CALCULATOR PRO 🧮
- *  FULLY AUTOMATED & ERROR-FREE ANDROID APPLICATION
+ *  BUILD STUDIO CALCULATOR PRO AI 🧮
+ *  ADVANCED & SCIENTIFIC CALCULATOR WITH HISTORY LOG
  * ========================================================== */
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import java.text.DecimalFormat;
-import java.util.Stack;
+import java.util.ArrayList;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
+    // Views
     private TextView tvExpression;
     private TextView tvResult;
+    private LinearLayout panelHistory;
+    private LinearLayout panelScientific;
+    private LinearLayout containerHistory;
+    private TextView tvEmptyHistory;
+    private TextView btnClearHistory;
+    private Button btnToggleSci;
+    private Button btnToggleHistory;
 
+    // Calculator State
     private String expression = "";
     private DecimalFormat decimalFormat = new DecimalFormat("#.########");
+    private ArrayList<String> historyList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +41,64 @@ public class MainActivity extends Activity implements View.OnClickListener {
         // Initialize Views
         tvExpression = findViewById(R.id.tvExpression);
         tvResult = findViewById(R.id.tvResult);
+        panelHistory = findViewById(R.id.panelHistory);
+        panelScientific = findViewById(R.id.panelScientific);
+        containerHistory = findViewById(R.id.containerHistory);
+        tvEmptyHistory = findViewById(R.id.tvEmptyHistory);
+        btnClearHistory = findViewById(R.id.btnClearHistory);
+        btnToggleSci = findViewById(R.id.btnToggleSci);
+        btnToggleHistory = findViewById(R.id.btnToggleHistory);
 
-        // Set Click Listeners for Buttons
+        // Setup Toggle Buttons
+        if (btnToggleSci != null) {
+            btnToggleSci.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (panelScientific != null) {
+                        if (panelScientific.getVisibility() == View.VISIBLE) {
+                            panelScientific.setVisibility(View.GONE);
+                        } else {
+                            panelScientific.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+            });
+        }
+
+        if (btnToggleHistory != null) {
+            btnToggleHistory.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (panelHistory != null) {
+                        if (panelHistory.getVisibility() == View.VISIBLE) {
+                            panelHistory.setVisibility(View.GONE);
+                        } else {
+                            panelHistory.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+            });
+        }
+
+        if (btnClearHistory != null) {
+            btnClearHistory.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    historyList.clear();
+                    renderHistory();
+                    Toast.makeText(MainActivity.this, "History Cleared", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        // Standard Button IDs
         int[] buttonIds = {
             R.id.btn0, R.id.btn1, R.id.btn2, R.id.btn3, R.id.btn4,
             R.id.btn5, R.id.btn6, R.id.btn7, R.id.btn8, R.id.btn9,
             R.id.btnDot, R.id.btnPlus, R.id.btnMinus, R.id.btnMultiply,
             R.id.btnDivide, R.id.btnPercent, R.id.btnBracket,
-            R.id.btnClear, R.id.btnBack, R.id.btnEquals
+            R.id.btnClear, R.id.btnBack, R.id.btnEquals,
+            R.id.btnSqrt, R.id.btnSquare, R.id.btnPower, R.id.btnPi, R.id.btnPlusMinus
         };
 
         for (int id : buttonIds) {
@@ -71,6 +133,18 @@ public class MainActivity extends Activity implements View.OnClickListener {
             appendOperator("÷");
         } else if (id == R.id.btnPercent) {
             appendOperator("%");
+        } else if (id == R.id.btnSqrt) {
+            applyScientificOp("√");
+        } else if (id == R.id.btnSquare) {
+            applyScientificOp("sqr");
+        } else if (id == R.id.btnPower) {
+            appendOperator("^");
+        } else if (id == R.id.btnPi) {
+            expression += "3.14159";
+            updateDisplay();
+            evaluateLiveResult();
+        } else if (id == R.id.btnPlusMinus) {
+            applyPlusMinus();
         } else if (id == R.id.btn0) {
             appendDigit("0");
         } else if (id == R.id.btn1) {
@@ -111,7 +185,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         char lastChar = expression.charAt(expression.length() - 1);
         if (isOperator(lastChar)) {
-            // Replace previous operator
             expression = expression.substring(0, expression.length() - 1) + op;
         } else {
             expression += op;
@@ -157,6 +230,45 @@ public class MainActivity extends Activity implements View.OnClickListener {
         evaluateLiveResult();
     }
 
+    private void applyScientificOp(String op) {
+        if (expression.isEmpty()) return;
+        try {
+            double res = evaluateExpression(expression);
+            if (!Double.isNaN(res) && !Double.isInfinite(res)) {
+                double out = res;
+                if (op.equals("√")) {
+                    if (res < 0) {
+                        tvResult.setText("Invalid Input");
+                        return;
+                    }
+                    out = Math.sqrt(res);
+                } else if (op.equals("sqr")) {
+                    out = res * res;
+                }
+                String formatted = formatResult(out);
+                historyList.add(0, op + "(" + expression + ") = " + formatted);
+                renderHistory();
+                expression = formatted;
+                updateDisplay();
+                tvResult.setText(formatted);
+            }
+        } catch (Exception e) {
+            tvResult.setText("Error");
+        }
+    }
+
+    private void applyPlusMinus() {
+        if (expression.isEmpty()) {
+            expression = "-";
+        } else if (expression.startsWith("-")) {
+            expression = expression.substring(1);
+        } else {
+            expression = "-" + expression;
+        }
+        updateDisplay();
+        evaluateLiveResult();
+    }
+
     private boolean hasDotInCurrentToken() {
         for (int i = expression.length() - 1; i >= 0; i--) {
             char c = expression.charAt(i);
@@ -196,7 +308,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 tvResult.setText(formatResult(res));
             }
         } catch (Exception e) {
-            // Live eval ignores syntax errors until equals is pressed
+            // Live eval ignores transient errors
         }
     }
 
@@ -210,12 +322,48 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 tvResult.setText("Error");
             } else {
                 String formatted = formatResult(res);
+                historyList.add(0, expression + " = " + formatted);
+                renderHistory();
                 tvResult.setText(formatted);
                 expression = formatted;
                 tvExpression.setText("");
             }
         } catch (Exception e) {
             tvResult.setText("Error");
+        }
+    }
+
+    private void renderHistory() {
+        if (containerHistory == null) return;
+        containerHistory.removeAllViews();
+        if (historyList.isEmpty()) {
+            if (tvEmptyHistory != null) containerHistory.addView(tvEmptyHistory);
+            return;
+        }
+
+        for (final String item : historyList) {
+            TextView tv = new TextView(this);
+            tv.setText(item);
+            tv.setTextColor(0xFFE0E0E0);
+            tv.setTextSize(13);
+            tv.setPadding(8, 8, 8, 8);
+            tv.setClickable(true);
+            tv.setFocusable(true);
+            tv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Extract result after '=' sign if present
+                    if (item.contains("=")) {
+                        String[] parts = item.split("=");
+                        if (parts.length > 1) {
+                            expression = parts[1].trim();
+                            updateDisplay();
+                            tvResult.setText(expression);
+                        }
+                    }
+                }
+            });
+            containerHistory.addView(tv);
         }
     }
 
@@ -228,10 +376,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     private boolean isOperator(char c) {
-        return c == '+' || c == '-' || c == '×' || c == '÷' || c == '%';
+        return c == '+' || c == '-' || c == '×' || c == '÷' || c == '%' || c == '^';
     }
 
-    // Mathematical Expression Parser (Dijkstra / Shunting Yard algorithm)
+    // Expression Evaluator Algorithm
     private double evaluateExpression(String expr) throws Exception {
         String cleanExpr = expr.replace("×", "*").replace("÷", "/");
         return parseAndEval(cleanExpr);
@@ -299,6 +447,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 } else {
                     return Double.NaN;
                 }
+
+                if (eat('^')) x = Math.pow(x, parseFactor());
 
                 return x;
             }
