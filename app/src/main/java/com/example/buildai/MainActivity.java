@@ -38,6 +38,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     // Button click sound
     private SoundPool soundPool;
     private int clickSoundId;
+    private int equalsSoundId;
     private boolean soundLoaded = false;
 
     @Override
@@ -61,6 +62,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             }
         });
         clickSoundId = soundPool.load(this, R.raw.click, 1);
+        equalsSoundId = soundPool.load(this, R.raw.equals, 1);
 
         // Initialize Views
         tvExpression = findViewById(R.id.tvExpression);
@@ -138,15 +140,21 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        playClick();
         int id = v.getId();
+
+        // Equals uses a distinct confirmation sound
+        if (id == R.id.btnEquals) {
+            playEqualsSound();
+            calculateFinalResult();
+            return;
+        }
+
+        playClick();
 
         if (id == R.id.btnClear) {
             clearAll();
         } else if (id == R.id.btnBack) {
             backspace();
-        } else if (id == R.id.btnEquals) {
-            calculateFinalResult();
         } else if (id == R.id.btnBracket) {
             handleBracket();
         } else if (id == R.id.btnDot) {
@@ -197,8 +205,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     private void playClick() {
+        playSound(clickSoundId);
+    }
+
+    private void playEqualsSound() {
+        playSound(equalsSoundId);
+    }
+
+    private void playSound(int soundId) {
         if (soundPool != null && soundLoaded) {
-            soundPool.play(clickSoundId, 1f, 1f, 1, 0, 1f);
+            soundPool.play(soundId, 1f, 1f, 1, 0, 1f);
         }
     }
 
