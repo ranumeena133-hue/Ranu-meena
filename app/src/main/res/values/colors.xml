@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<color name="colorPrimary">#4F46E5</color>
-	<color name="colorPrimaryDark">#312E81</color>
-	<color name="colorAccent">#06B6D4</color>
-	<color name="colorControlHighlight">#E0E7FF</color>
-	<color name="colorControlNormal">#6366F1</color>
+    <color name="colorPrimary">#1E1E2C</color>
+    <color name="colorPrimaryDark">#12121C</color>
+    <color name="colorAccent">#6C5CE7</color>
+    <color name="colorControlHighlight">#3D3B54</color>
+    <color name="colorControlNormal">#A0A0B0</color>
+
+    <color name="calcBg">#161622</color>
+    <color name="displayBg">#1E1E2C</color>
+    <color name="btnNumber">#2A2A3C</color>
+    <color name="btnOperator">#3D3B54</color>
+    <color name="btnAction">#FF4757</color>
+    <color name="btnEquals">#6C5CE7</color>
+    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="textColorSecondary">#A0A0B0</color>
 </resources>
