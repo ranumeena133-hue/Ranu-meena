@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#161622"
+    android:padding="24dp">
+
+    <!-- Center Content Block -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_centerInParent="true">
+
+        <!-- App Icon -->
+        <ImageView
+            android:id="@+id/splashLogo"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:src="@drawable/app_icon"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- App Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CALCULATOR PRO"
+            android:textColor="#FFFFFF"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.12"
+            android:gravity="center"/>
+
+        <!-- Tagline -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Smart, Fast &amp; Modern Calculator"
+            android:textColor="#A0A0B0"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp"
+            android:gravity="center"/>
+
+        <!-- Loading Progress Bar -->
+        <ProgressBar
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="36dp"
+            android:indeterminate="true"
+            android:indeterminateTint="#6C5CE7"/>
+
+    </LinearLayout>
+
+    <!-- Footer -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="POWERED BY BUILD STUDIO AI"
+        android:textColor="#6C5CE7"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.15"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"/>
+
+</RelativeLayout>
