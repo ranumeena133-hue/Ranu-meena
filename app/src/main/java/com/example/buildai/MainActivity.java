@@ -344,7 +344,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         for (final String item : historyList) {
             TextView tv = new TextView(this);
             tv.setText(item);
-            tv.setTextColor(0xFFE0E0E0);
+            tv.setTextColor(0xFF0F172A);
             tv.setTextSize(13);
             tv.setPadding(8, 8, 8, 8);
             tv.setClickable(true);
